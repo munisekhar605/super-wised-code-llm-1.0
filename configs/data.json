@@ -1,0 +1,24 @@
+{
+  "batch_name": "Batch 1 (JavaScript, TypeScript, Node.js, Express.js, NestJS)",
+  "tokenizer": "bigcode/starcoder2-15b",
+  "text_column": "text",
+  "license_column": "license",
+  "max_records": 50000,
+  "min_chars": 40,
+  "min_split_tokens": 300,
+  "validation_fraction": 0.1,
+  "allowed_extensions": [".js", ".mjs", ".cjs", ".ts", ".mts", ".cts", ".jsx", ".tsx"],
+  "license_allowlist": [
+    "mit",
+    "apache-2.0",
+    "bsd-2-clause",
+    "bsd-3-clause",
+    "isc",
+    "0bsd",
+    "mpl-2.0",
+    "unlicense",
+    "cc0-1.0",
+    "zlib",
+    "artistic-2.0"
+  ]
+}

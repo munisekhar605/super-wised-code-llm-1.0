@@ -1,0 +1,16 @@
+{
+  "learning_rate": 0.0003,
+  "weight_decay": 0.1,
+  "beta1": 0.9,
+  "beta2": 0.95,
+  "grad_clip": 1.0,
+  "batch_size": 2,
+  "gradient_accumulation_steps": 4,
+  "max_steps": 50,
+  "eval_interval": 10,
+  "eval_batches": 5,
+  "save_interval": 10,
+  "warmup_steps": 5,
+  "min_lr_ratio": 0.1,
+  "seed": 1337
+}
