@@ -4,7 +4,7 @@ from typing import Any
 
 import torch
 
-from src.evaluation.code_execution import check_code_structure
+from src.evaluation.code_execution import check_code_structure, validate_code_syntax
 from src.inference.generate import generate_tokens
 from src.tokenizer.decode import decode_tokens
 from src.tokenizer.encode import encode_prompt_tensor
@@ -64,6 +64,7 @@ def run_batch1_benchmarks(
                 "completion": completion_text,
                 "generated_tokens": int(completion_ids.numel()),
                 "structure": check_code_structure(full_text),
+                "syntax_validation": validate_code_syntax(full_text, item["ecosystem"]),
             }
         )
     return results

@@ -154,6 +154,7 @@ def prepare_dataset(args: argparse.Namespace) -> dict[str, Any]:
         "license_column": args.license_column,
         "allowlist": sorted(allowed),
         "allow_unlicensed_after_review": args.allow_unlicensed_after_review,
+        "is_synthetic_smoke_corpus": bool(getattr(args, "generate_sample_jsonl", False)),
         "validation_fraction": args.validation_fraction,
         "stats": stats,
         "ecosystem_counts": ecosystem_counts,

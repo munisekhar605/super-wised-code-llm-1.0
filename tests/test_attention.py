@@ -29,6 +29,13 @@ class AttentionTests(unittest.TestCase):
         self.assertTrue(torch.isinf(masked[0, 0, 0, 1]).item())
         self.assertEqual(float(masked[0, 0, 2, 1].item()), 0.0)
 
+        # Rectangular query/key causal masking (as used in prefix or cache decoding)
+        rect_mask = build_causal_mask(2, key_len=4)
+        self.assertEqual(tuple(rect_mask.shape), (1, 1, 2, 4))
+        self.assertTrue(rect_mask[0, 0, 0, 2].item())
+        self.assertFalse(rect_mask[0, 0, 0, 3].item())
+        self.assertTrue(rect_mask[0, 0, 1, 3].item())
+
         cfg = ModelConfig(vocab_size=128, block_size=32, n_layer=1, n_head=4, n_kv_head=2, n_embd=64)
         attn = CausalGroupedQueryAttention(cfg)
         attn.eval()

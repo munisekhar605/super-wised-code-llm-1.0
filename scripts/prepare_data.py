@@ -21,7 +21,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     src = p.add_mutually_exclusive_group(required=False)
     src.add_argument("--input-jsonl", type=Path, help="Local JSONL file with code records.")
     src.add_argument("--hf-dataset", help="Hugging Face dataset repo ID to stream.")
-    p.add_argument("--generate-sample-jsonl", action="store_true", help="Generate synthetic Batch 1 smoke corpus.")
+    p.add_argument(
+        "--generate-sample-jsonl",
+        action="store_true",
+        help="Generate synthetic Batch 1 corpus for local/CI smoke testing ONLY. Do not use synthetic data as real training data.",
+    )
     p.add_argument("--sample-records", type=int, default=240)
     p.add_argument("--validate-only", action="store_true", help="Validate an existing processed dataset directory.")
     p.add_argument("--hf-config", help="Optional Hugging Face dataset subset name.")

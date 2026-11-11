@@ -42,10 +42,14 @@ def load_checkpoint(
     scaler: torch.amp.GradScaler | None = None,
 ) -> dict[str, Any]:
     # Load checkpoint weights and optionally restore optimizer, GradScaler, and RNG states.
-    state = torch.load(path, map_location="cpu", weights_only=False)
+    state = torch.load(path, map_location=device, weights_only=False)
     model.load_state_dict(state["model"])
     if optimizer is not None and "optimizer" in state:
         optimizer.load_state_dict(state["optimizer"])
+        for state_val in optimizer.state.values():
+            for k, v in state_val.items():
+                if isinstance(v, torch.Tensor):
+                    state_val[k] = v.to(device)
     if scaler is not None and state.get("scaler"):
         scaler.load_state_dict(state["scaler"])
     restore_rng_state(state, device)

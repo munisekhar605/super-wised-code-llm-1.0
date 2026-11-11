@@ -19,10 +19,17 @@ from src.data.filter import (
 )
 from src.data.pack import stable_validation_split
 from src.data.validate import validate_dataset
-from src.evaluation.code_execution import check_code_structure
+from src.evaluation.code_execution import (
+    check_code_structure,
+    validate_code_syntax,
+    validate_javascript_syntax,
+    validate_typescript_syntax,
+)
 from src.evaluation.report import run_evaluation
 from src.tokenizer.tokenizer import REQUIRED_TOKENIZER_ID
+from src.training.optimizer import build_optimizer
 from src.training.trainer import run_training
+from src.transformer.model import ModelConfig, TransformerDecoder
 
 
 class TrainingAndDataPipelineTests(unittest.TestCase):
@@ -49,6 +56,25 @@ class TrainingAndDataPipelineTests(unittest.TestCase):
             stable_validation_split({"repo_name": "acme/api"}, "b", 0.2),
         )
         self.assertEqual(check_code_structure(code_a)["unmatched_closing_delimiters"], 0)
+        self.assertTrue(validate_javascript_syntax("function add(a, b) { return a + b; }\n")["valid"])
+        self.assertTrue(validate_typescript_syntax(code_a)["valid"])
+        self.assertFalse(validate_javascript_syntax("function broken( { return; }")["valid"])
+        self.assertTrue(validate_code_syntax(code_a, "typescript")["valid"])
+
+    def test_optimizer_parameter_groups_and_weight_decay(self) -> None:
+        cfg = ModelConfig(vocab_size=128, block_size=32, n_layer=2, n_head=4, n_kv_head=2, n_embd=64)
+        model = TransformerDecoder(cfg)
+        opt = build_optimizer(model, lr=1e-3, weight_decay=0.1)
+        self.assertEqual(len(opt.param_groups), 2)
+        decay_group = opt.param_groups[0]
+        no_decay_group = opt.param_groups[1]
+        self.assertEqual(decay_group["weight_decay"], 0.1)
+        self.assertEqual(no_decay_group["weight_decay"], 0.0)
+        # Ensure all trainable parameters are accounted for exactly once
+        all_model_params = set(model.parameters())
+        grouped_params = set(decay_group["params"]) | set(no_decay_group["params"])
+        self.assertEqual(all_model_params, grouped_params)
+        self.assertTrue(len(set(decay_group["params"]).intersection(set(no_decay_group["params"]))) == 0)
 
     def test_end_to_end_prepare_train_resume_evaluate_publish(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

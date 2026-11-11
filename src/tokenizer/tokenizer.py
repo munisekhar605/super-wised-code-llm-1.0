@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from transformers import AutoTokenizer
+from transformers import AutoConfig, AutoTokenizer
 
 REQUIRED_TOKENIZER_ID = "bigcode/starcoder2-15b"
 
@@ -27,13 +27,23 @@ def validate_tokenizer_source(tokenizer_name_or_path: str | Path) -> str:
 
 
 def load_starcoder2_tokenizer(tokenizer_name_or_path: str | Path = REQUIRED_TOKENIZER_ID):
-    # Load the fast StarCoder2 tokenizer without loading any pretrained model weights.
+    # Load the fast StarCoder2 tokenizer with synchronized BOS/EOS token IDs without model weights.
     validated = validate_tokenizer_source(tokenizer_name_or_path)
+    config = AutoConfig.for_model(
+        "starcoder2",
+        vocab_size=49152,
+        bos_token_id=0,
+        eos_token_id=0,
+    )
     tokenizer = AutoTokenizer.from_pretrained(
         validated,
+        config=config,
+        bos_token_id=0,
+        eos_token_id=0,
         use_fast=True,
         clean_up_tokenization_spaces=False,
     )
-    if tokenizer.eos_token_id is None:
-        raise RuntimeError(f"Tokenizer '{validated}' does not define an eos_token_id.")
+    if tokenizer.eos_token_id != 0 or tokenizer.bos_token_id != 0:
+        tokenizer.bos_token_id = 0
+        tokenizer.eos_token_id = 0
     return tokenizer
