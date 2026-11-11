@@ -96,7 +96,7 @@ def prepare_dataset(args: argparse.Namespace) -> dict[str, Any]:
                 continue
             text = row.get(args.text_column)
             if not isinstance(text, str):
-                for fallback_col in ("content", "code"):
+                for fallback_col in ("original_string", "code", "content"):
                     candidate = row.get(fallback_col)
                     if isinstance(candidate, str):
                         text = candidate
