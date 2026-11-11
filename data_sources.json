@@ -1,0 +1,26 @@
+{
+  "tokenizer": {
+    "repo_id": "bigcode/starcoder2-15b",
+    "url": "https://huggingface.co/bigcode/starcoder2-15b",
+    "use": "Tokenizer only; do not load pretrained model weights for this from-scratch project.",
+    "note": "Review the tokenizer/model repository license terms before redistribution. Keep tokenizer IDs unchanged after tokenizing the corpus."
+  },
+  "candidate_datasets": [
+    {"name": "StarCoderData", "url": "https://huggingface.co/datasets/bigcode/starcoderdata", "use": "Potential source for code pretraining", "caution": "Inspect dataset card, access requirements, source-level license metadata, and allowed use before processing."},
+    {"name": "The Stack v2", "url": "https://huggingface.co/datasets/bigcode/the-stack-v2", "use": "Repository code and development history", "caution": "May require access approval and has usage conditions. Do not bypass gating or license constraints."},
+    {"name": "CommitPack", "url": "https://huggingface.co/datasets/bigcode/commitpack", "use": "Code changes and commit-related examples", "caution": "Verify license/provenance; filter low-quality and duplicate patches."},
+    {"name": "CodeSearchNet", "url": "https://huggingface.co/datasets/CodeSearchNet/code_search_net", "use": "Code/documentation pairs", "caution": "Check dataset card and individual source terms; useful for selected tasks, not a complete corpus by itself."},
+    {"name": "Official JavaScript docs", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript", "use": "Curated JavaScript reference material", "caution": "Follow the site's content licensing and attribution requirements."},
+    {"name": "Node.js docs", "url": "https://nodejs.org/docs/latest/api/", "use": "Node.js APIs", "caution": "Check documentation licensing and retain attribution as required."},
+    {"name": "TypeScript docs", "url": "https://www.typescriptlang.org/docs/", "use": "TypeScript handbook and reference", "caution": "Check licensing and attribution terms."},
+    {"name": "Express docs", "url": "https://expressjs.com/", "use": "Express.js APIs and examples", "caution": "Check repository and documentation licenses."},
+    {"name": "NestJS docs", "url": "https://docs.nestjs.com/", "use": "NestJS APIs and patterns", "caution": "Check documentation/repository licenses."}
+  ],
+  "data_policy": [
+    "Never assume all public GitHub code is licensed for model training.",
+    "Keep source URL, repository, path, license identifier, and content hash where possible.",
+    "Exclude secrets, private data, generated bundles, minified code, vendored dependencies, and benchmark answer leakage.",
+    "Use repository-level train/validation separation for credible evaluation.",
+    "Do not pad token targets with duplicates or low-quality synthetic examples."
+  ]
+}
