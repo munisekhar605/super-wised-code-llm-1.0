@@ -29,6 +29,13 @@ def build_arg_parser() -> argparse.ArgumentParser:
     p.add_argument("--sample-records", type=int, default=240)
     p.add_argument("--validate-only", action="store_true", help="Validate an existing processed dataset directory.")
     p.add_argument("--hf-config", help="Optional Hugging Face dataset subset name.")
+    p.add_argument(
+        "--data-dir",
+        "--hf-data-dir",
+        dest="data_dir",
+        help="Optional dataset subfolder / language directory (e.g. 'javascript' or 'typescript' for bigcode/starcoderdata).",
+    )
+    p.add_argument("--hf-token", help="Optional Hugging Face authentication token for gated datasets.")
     p.add_argument("--split", default="train")
     p.add_argument("--text-column", default="text")
     p.add_argument("--license-column", default="license")

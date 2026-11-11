@@ -96,6 +96,12 @@ def prepare_dataset(args: argparse.Namespace) -> dict[str, Any]:
                 continue
             text = row.get(args.text_column)
             if not isinstance(text, str):
+                for fallback_col in ("content", "code"):
+                    candidate = row.get(fallback_col)
+                    if isinstance(candidate, str):
+                        text = candidate
+                        break
+            if not isinstance(text, str):
                 stats["rejected_short_or_generated"] += 1
                 continue
             text = text.strip()

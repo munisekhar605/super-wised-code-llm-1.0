@@ -27,11 +27,18 @@ def iter_local(path: Path) -> Iterable[dict[str, Any]]:
 
 def iter_hf(args: argparse.Namespace) -> Iterable[dict[str, Any]]:
     # Stream records from a Hugging Face dataset repository.
+    import os
     from datasets import load_dataset
 
     kwargs: dict[str, Any] = {"path": args.hf_dataset, "split": args.split, "streaming": True}
     if getattr(args, "hf_config", None):
         kwargs["name"] = args.hf_config
+    data_dir = getattr(args, "data_dir", None) or getattr(args, "hf_data_dir", None)
+    if data_dir:
+        kwargs["data_dir"] = data_dir
+    token = getattr(args, "hf_token", None) or os.environ.get("HF_TOKEN")
+    if token:
+        kwargs["token"] = token
     ds = load_dataset(**kwargs)
     yield from ds
 
